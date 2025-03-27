@@ -20,5 +20,4 @@ if ($stmt->execute()) {
 } else {
     echo json_encode(["status" => "error", "message" => "Failed to delete image"]);
 }
-
 ?>

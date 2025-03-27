@@ -11,13 +11,11 @@ try {
     if (!isset($data['originalValues']) || !is_array($data['originalValues'])) {
         throw new Exception('Invalid or missing originalValues data');
     }
-
     foreach ($data['originalValues'] as $deleteValue) {
         // Add validation for required fields
         if (!isset($deleteValue['shift']) || !isset($deleteValue['groupSize']) || !isset($deleteValue['role'])) {
             throw new Exception('Missing required fields in delete values');
         }
-
         $shiftId = intval($deleteValue['shift']);
         $numPeople = intval($deleteValue['groupSize']);
         $roleId = intval($deleteValue['role']);
@@ -30,6 +28,7 @@ try {
                 ELSE is_full 
             END 
         WHERE shift_id = :shiftId AND role_id = :roleId";
+        
         $stmt = $db->prepare($updateQuery);
         $stmt->bindValue(':numPeople', $numPeople, SQLITE3_INTEGER);
         $stmt->bindValue(':shiftId', $shiftId, SQLITE3_INTEGER);
@@ -43,8 +42,10 @@ try {
         $stmt->bindValue(':shiftId', $shiftId, SQLITE3_INTEGER);
         $result = $stmt->execute();
     }
+
     $db->exec('COMMIT');
     echo json_encode(['success' => true, 'message' => 'Successfully deleted all signups']);
+
 } catch (Exception $e) {
     $db->exec('ROLLBACK');
     error_log($e->getMessage()); // Log the error server-side

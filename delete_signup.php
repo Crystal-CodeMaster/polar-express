@@ -7,6 +7,7 @@ $signupId = $data['signupId'] ?? null;
 $groupSize = $data['numPeople'] ?? null;
 
 if ($signupId) {
+    
     $stmt = $db->prepare("
         UPDATE shift_availability_cache 
         SET 

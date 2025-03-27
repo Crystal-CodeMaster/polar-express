@@ -34,6 +34,7 @@ if ($signupId) {
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to delete signup.']);
     }
+    
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid signup ID.']);
 }

@@ -8,7 +8,6 @@ require 'db_connection.php';
 session_start();
 
 // Custom error handler for runtime issues
-
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     return true;
 });

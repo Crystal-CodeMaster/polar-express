@@ -1,0 +1,1 @@
+{"event_days":"<b><span style=\"font-size:30px;\">Test<\/span><\/b> <i>day<\/i><\/span><\/span>","first_ride_time":"<i>Test<\/i> <b>ride<\/b>","ticket_prices":"<span style=\"font-size:14px;\">Test price<\/span>","footer":"@2024 Polar express"}

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Content Editor</title>
+    <style>
+    
+body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; }
+        .controls-container { display: flex; justify-content: center; margin-bottom: 10px; }
+        .section { margin: 0 15px; text-align: center; }
+        .btn { padding: 8px 12px; margin: 5px; cursor: pointer; border: 1px solid #ccc; background: #fff; }
+        .btn.selected { background: #FFD700; color: black; }
+        .editor-container { display: flex; justify-content: center; margin-top: 20px; }
+        #editor { width: 80%; min-height: 300px; border: 1px solid #ccc; padding: 10px; overflow-y: auto; background: #003f74; color: white; text-align: center; }
+        .separator { margin: 0 10px; font-size: 18px; font-weight: bold; }
+        .html-toggle { display: none; width: 80%; height: 300px; margin: auto; background: white; color: black; }
+        img { max-width: 100%; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<!-- Page Selection Dropdown -->
+<div class="controls-container">
+    <label for="pageSelect"><strong>Select Page:</strong></label>
+    <select id="pageSelect">
+        <option value="index.php">Home</option>
+        <option value="ticket.php">Tickets</option>
+        <option value="gallery.php">Photo Gallery</option>
+        <option value="sponsors.php">Sponsors</option>
+        <option value="sponsor_us.php">Be a Sponsor</option>
+        <option value="faqs.php">FAQs</option>
+        <option value="merchandise.php">Merchandise</option>
+        <option value="contact.php">Contact</option>
+        <option value="footer">Footer</option>
+    </select>
+</div>
+
+<h2>Website Content Editor</h2>
+
+<!-- Back to Admin Dashboard Button -->
+<div style="text-align: center; margin-bottom: 15px;">
+    <a href="dashboard.php" style="display: inline-block; padding: 10px 20px; font-size: 16px; 
+        color: black; background-color: gold; text-decoration: none; border-radius: 5px;">
+        ⬅ Back to Admin Dashboard
+    </a>
+</div>
+
+<!-- Editor Controls -->
+<div class="controls-container">
+    <div class="section" data-group="fontSize">
+        <strong>Font Size</strong><br>
+        <button class="btn selected" onclick="setFontSize(this, '16px')">Normal</button>
+        <button class="btn" onclick="setFontSize(this, '30px')">Headline</button>
+        <button class="btn" onclick="setFontSize(this, '12px')">Footer</button>
+    </div>
+    <span class="separator">|</span>
+    <div class="section" data-group="fontColor">
+        <strong>Font Color</strong><br>
+        <button class="btn selected" onclick="setFontColor(this, '#FFFFFF')">White</button>
+        <button class="btn" onclick="setFontColor(this, '#66C266')">Green</button>
+        <button class="btn" onclick="setFontColor(this, '#FFD700')">Gold</button>
+    </div>
+    <span class="separator">|</span>
+    <div class="section">
+        <strong>Text Style</strong><br>
+        <button class="btn" onclick="toggleStyle(this, 'bold')">Bold</button>
+        <button class="btn" onclick="toggleStyle(this, 'italic')">Italic</button>
+        <button class="btn" onclick="toggleStyle(this, 'underline')">Underline</button>
+    </div>
+    <span class="separator">|</span>
+    <div class="section" data-group="justify">
+        <strong>Justification</strong><br>
+        <button class="btn" onclick="setJustification(this, 'left')">Left</button>
+        <button class="btn selected" onclick="setJustification(this, 'center')">Center</button>
+        <button class="btn" onclick="setJustification(this, 'right')">Right</button>
+    </div>
+    <span class="separator">|</span>
+    <div class="section">
+        <strong>Special Functions</strong><br>
+        <button class="btn" onclick="addLink()">Add Link</button>
+        <button class="btn" onclick="insertTable()">Insert Table</button>
+        <button class="btn" onclick="insertImage()">Insert Image</button>
+        <button class="btn" onclick="toggleHtmlView(this)">HTML Mode</button>
+    </div>
+</div>
+
+<!-- Editor Area -->
+<div class="editor-container">
+    <div id="editor" contenteditable="true"></div>
+    <textarea id="htmlView" class="html-toggle"></textarea>
+</div>
+
+<!-- Save / Undo / Redo Buttons -->
+<div class="controls-container">
+    <button class="btn" onclick="undo()">Undo</button>
+    <button class="btn" onclick="redo()">Redo</button>
+    <button class="btn" onclick="saveText()">Save</button>
+</div>
+
+<script>
+function loadContent() {
+    let page = document.getElementById("pageSelect").value;
+    fetch("load.php?page=" + encodeURIComponent(page))
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("editor").innerHTML = data;
+        })
+        .catch(error => console.error("Error loading content:", error));
+}
+
+// Trigger content loading when the dropdown changes
+document.getElementById("pageSelect").addEventListener("change", function() {
+    loadContent();
+});
+
+function updateSelection(button) {
+    let group = button.parentElement.getAttribute("data-group");
+    if (group) {
+        document.querySelectorAll(`.section[data-group="${group}"] .btn`).forEach(btn => btn.classList.remove("selected"));
+    }
+    button.classList.add("selected");
+}
+
+window.onload = function() {
+    document.querySelector('.section[data-group="fontSize"] .btn.selected').click();
+    document.querySelector('.section[data-group="fontColor"] .btn.selected').click();
+    document.querySelector('.section[data-group="justify"] .btn.selected').click();
+    loadContent();
+};
+function setFontSize(button, size) {
+    document.execCommand("removeFormat", false, null); // Ensure consistent application
+    document.execCommand("fontSize", false, "7"); // Uses font size 7 as a placeholder
+
+    let fontElements = document.getElementsByTagName("font");
+    for (let i = 0; i < fontElements.length; i++) {
+        if (fontElements[i].size == "7") {
+            fontElements[i].removeAttribute("size");
+            fontElements[i].style.fontSize = size; // Applies the correct size
+        }
+    }
+    updateSelection(button);
+}
+function setFontColor(button, color) { 
+    document.execCommand("foreColor", false, color);
+    updateSelection(button);
+}
+
+function toggleStyle(button, style) {
+    document.execCommand(style, false, null);
+    
+    // Check if the style is currently active
+    let isActive = document.queryCommandState(style);
+
+    // Update button highlighting based on active state
+    if (isActive) {
+        button.classList.add("selected");
+    } else {
+        button.classList.remove("selected");
+    }
+}
+function setJustification(button, alignment) { 
+    document.execCommand("justify" + alignment.charAt(0).toUpperCase() + alignment.slice(1), false, null);
+    updateSelection(button);
+}
+
+function toggleHtmlView(button) {
+    let editor = document.getElementById("editor");
+    let htmlView = document.getElementById("htmlView");
+
+    if (htmlView.style.display === "none") {
+        // Switch to HTML mode
+        htmlView.style.display = "block";
+        editor.style.display = "none";
+        htmlView.value = editor.innerHTML.trim(); // Preserve content properly
+        button.classList.add("selected"); // Highlight button when active
+    } else {
+        // Switch back to WYSIWYG mode
+        editor.style.display = "block";
+        htmlView.style.display = "none";
+        
+        // Prevent empty content when switching back
+        if (htmlView.value.trim() !== "") {
+            editor.innerHTML = htmlView.value;
+        }
+
+        button.classList.remove("selected"); // Remove highlight
+    }
+}
+
+function addLink() {
+    let url = prompt("Enter the URL:");
+    if (url) {
+        document.execCommand("createLink", false, url);
+
+        // Ensure the link does not change the text color
+        let editor = document.getElementById("editor");
+        let links = editor.getElementsByTagName("a");
+        for (let link of links) {
+            link.style.color = "inherit"; // Keeps original text color
+            link.style.textDecoration = "underline"; // Ensures underline is applied
+            link.setAttribute("target", "_blank"); // Opens link in a new tab
+        }
+    }
+}
+function insertTable() { document.execCommand("insertHTML", false, "<table border='1'><tr><td>Cell 1</td><td>Cell 2</td></tr></table>"); }
+
+
+function insertImage() {
+    let input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    
+    input.onchange = function(event) {
+        let file = event.target.files[0];
+        let reader = new FileReader();
+
+        reader.onload = function(e) {
+            let img = document.createElement("img");
+            img.src = e.target.result;
+            img.style.maxWidth = "100%";
+            img.style.cursor = "pointer";
+
+            // Allow resizing when clicking the image
+            img.onclick = function() {
+                let newSize = prompt("Enter image width in pixels:", "300");
+                if (newSize) img.style.width = newSize + "px";
+            };
+
+            document.getElementById("editor").appendChild(img);
+        };
+
+        reader.readAsDataURL(file);
+    };
+
+    input.click();
+}
+
+function saveText() {
+    let content = document.getElementById("editor").innerHTML;
+    let page = document.getElementById("pageSelect").value;
+
+    fetch("save.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "page=" + encodeURIComponent(page) + "&content=" + encodeURIComponent(content)
+    })
+    .then(response => response.text())
+    .then(data => {
+        let cleanData = data.trim().toLowerCase(); // Clean up response
+        if (cleanData === "success") { // Now only checks for "success"
+            alert("Content Saved!"); 
+        } else {
+            alert("Error saving content: " + data);
+        }
+    })
+    .catch(error => alert("Error: " + error));
+}
+
+function undo() {
+    document.execCommand("undo", false, null);
+}
+
+function redo() {
+    document.execCommand("redo", false, null);
+}
+
+</script>
+
+</body>
+</html>

@@ -11,6 +11,7 @@ try {
     if (!isset($data['originalValues']) || !is_array($data['originalValues'])) {
         throw new Exception('Invalid or missing originalValues data');
     }
+    
     foreach ($data['originalValues'] as $deleteValue) {
         // Add validation for required fields
         if (!isset($deleteValue['shift']) || !isset($deleteValue['groupSize']) || !isset($deleteValue['role'])) {

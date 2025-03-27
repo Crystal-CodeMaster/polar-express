@@ -39,9 +39,7 @@ $footerContent = $footerRow && isset($footerRow['content']) ? $footerRow['conten
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #003f74;
-            /* Dark blue evening sky */
             color: #fff;
-            /* White for text */
             text-align: center;
         }
 
@@ -90,13 +88,11 @@ $footerContent = $footerRow && isset($footerRow['content']) ? $footerRow['conten
             height: auto;
             cursor: pointer;
             transition: transform 0.3s ease;
-            /* Smoother animation */
             border: 2px solid #fff;
         }
 
         .gallery img:hover {
             transform: scale(1.3);
-            /* Increase the zoom effect */
         }
 
         .fullscreen {
@@ -127,7 +123,6 @@ $footerContent = $footerRow && isset($footerRow['content']) ? $footerRow['conten
 
         .image-wrapper {
             width: 200px;
-            /* Adjust width as needed */
             word-wrap: break-word;
             white-space: normal;
             overflow-wrap: break-word;
@@ -168,12 +163,12 @@ $footerContent = $footerRow && isset($footerRow['content']) ? $footerRow['conten
             </nav>
         </div>
     </header>
-<!-- Dynamic Page Content -->
+    <!-- Dynamic Page Content -->
     <div class="section">
         <?php echo $pageContent; ?>
     </div>
 
-  <!-- Dynamic Footer Content -->
+    <!-- Dynamic Footer Content -->
     <div style="width: 100%; background-color:#000000; height: 70px; text-align: center; font-size: 16px; 
     display: flex; align-items: center; justify-content: center;">
         <p style="margin: 0; color: #ffffff;"><?php echo $footerContent; ?></p>

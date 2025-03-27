@@ -13,8 +13,7 @@ if (!isset($data['id']) || !isset($data['header_text'])) {
 $id = $data['id'];
 $header_text = $data['header_text'];
 $sub_text = $data['sub_text'];
-// var_dump($id);
-// var_dump($header_text);
+
 $sql = "UPDATE header_table SET header_text = :header_text, sub_text = :sub_text WHERE id = :id";
 $stmt = $db->prepare($sql);
 $stmt->bindValue(':header_text', $header_text, SQLITE3_TEXT);

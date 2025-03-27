@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <h1 class="text-center">Admin Login</h1>
         <div class="card p-4 shadow-sm mx-auto" style="max-width: 400px;">
             <?php if (isset($error)): ?>
-                <div class="alert alert-danger"><?php echo $error; ?></div>
+                <div class="alert alert-danger"><?php echo $error;?></div>
             <?php endif; ?>
             <form method="post">
                 <div class="mb-3">

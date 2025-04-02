@@ -3,7 +3,6 @@ require 'db_connection.php';
 header('Content-Type: application/json');
 session_start();
 $data = json_decode(file_get_contents('php://input'), true);
-
 try {
     $db->exec('BEGIN TRANSACTION');
 
@@ -13,7 +12,7 @@ try {
     }
     
     foreach ($data['originalValues'] as $deleteValue) {
-        // Add validation for required fields
+        // Add validation for requir  field
         if (!isset($deleteValue['shift']) || !isset($deleteValue['groupSize']) || !isset($deleteValue['role'])) {
             throw new Exception('Missing required fields in delete values');
         }

@@ -21,6 +21,7 @@ if (!isset($_SESSION['volunteer_id']) || empty($_SESSION['volunteer_id'])) {
     exit;
 }
 
+// volunteerId
 $volunteerId = intval($_SESSION['volunteer_id']);
 
 try {
@@ -60,7 +61,7 @@ try {
             $shiftStart = $rideStart - 900;   // 15 minutes before departure
             $shiftEnd = $shiftStart + 5400;   // 90 minutes shift
         }
-
+        //$rideShifts[$ride['id']]
         $rideShifts[$ride['id']] = [
             'day_abbr' => DateTime::createFromFormat('Y-m-d', $ride['day'])->format('D'),
             'shift_start' => date('h:i A', $shiftStart),
